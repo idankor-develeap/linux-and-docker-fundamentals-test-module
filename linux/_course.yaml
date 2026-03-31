@@ -1,0 +1,5 @@
+schema_version: 1
+id: linux
+display_name: "Linux"
+description: "Linux fundamentals: navigation, filesystem, and permissions."
+version: "1.0"

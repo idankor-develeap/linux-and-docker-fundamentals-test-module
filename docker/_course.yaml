@@ -1,0 +1,5 @@
+schema_version: 1
+id: docker
+display_name: "Docker"
+description: "Docker fundamentals: basics, images, and containers."
+version: "1.0"
