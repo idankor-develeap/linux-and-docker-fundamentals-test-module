@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docker Containers — Visual Summary</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 860px;
+      max-width: 96vw;
+    }
+
+    .slide {
+      display: none;
+      background: #1a1d2e;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 52px 60px;
+      min-height: 420px;
+      position: relative;
+      animation: fadeIn 0.25s ease;
+    }
+    .slide.active { display: flex; flex-direction: column; gap: 20px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .slide-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4a90d9;
+    }
+
+    h2 { font-size: 2rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    h3 { font-size: 1.15rem; font-weight: 600; color: #a0aec0; margin-top: 4px; }
+
+    p { font-size: 1.05rem; line-height: 1.7; color: #cbd5e0; }
+
+    ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    ul li { display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; color: #e2e8f0; }
+    ul li::before { content: '▸'; color: #4a90d9; flex-shrink: 0; margin-top: 2px; }
+
+    pre {
+      background: #0d1117;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #7ee787;
+      overflow-x: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: #0d1117;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .card .card-title { font-weight: 700; color: #4a90d9; margin-bottom: 8px; font-size: 0.95rem; }
+    .card p { font-size: 0.93rem; color: #a0aec0; }
+
+    .badge {
+      display: inline-block;
+      background: #1e3a5f;
+      color: #60a5fa;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .lifecycle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 8px 0;
+    }
+    .lc-box {
+      background: #1e3a5f;
+      color: #93c5fd;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .lc-arrow {
+      color: #4a90d9;
+      font-size: 1.3rem;
+      padding: 0 6px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    button {
+      background: #1e3a5f;
+      color: #93c5fd;
+      border: 1px solid #2d5f9e;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    button:hover { background: #2d5f9e; }
+    button:disabled { opacity: 0.3; cursor: default; }
+
+    .counter { font-size: 0.9rem; color: #718096; min-width: 60px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <span class="slide-label">Docker Module · Lesson 3</span>
+    <h2>Docker Containers</h2>
+    <h3>Lifecycle, ports, volumes, and environment variables</h3>
+    <p>Containers are ephemeral by default — everything written inside is lost when the container is removed. This lesson covers how to run, manage, and persist data in containers.</p>
+  </div>
+
+  <!-- Slide 2: Ephemeral -->
+  <div class="slide">
+    <span class="slide-label">Concept</span>
+    <h2>Containers Are Ephemeral</h2>
+    <ul>
+      <li>A container's filesystem is <strong>isolated</strong> from the host</li>
+      <li>Any files written inside are <strong>lost when you run <code>docker rm</code></strong></li>
+      <li>The image itself is never modified — containers are disposable instances</li>
+      <li>This is a feature, not a bug — makes containers stateless and reproducible</li>
+    </ul>
+    <p style="margin-top:8px; font-size:0.93rem; color:#718096;">
+      To persist data, use <strong>volumes</strong> or <strong>bind mounts</strong> (covered in slide 5).
+    </p>
+  </div>
+
+  <!-- Slide 3: Lifecycle -->
+  <div class="slide">
+    <span class="slide-label">Lifecycle</span>
+    <h2>Container Lifecycle</h2>
+    <div class="lifecycle">
+      <div class="lc-box">Image</div>
+      <span class="lc-arrow">→</span>
+      <div class="lc-box">Created</div>
+      <span class="lc-arrow">→</span>
+      <div class="lc-box">Running</div>
+      <span class="lc-arrow">→</span>
+      <div class="lc-box">Stopped</div>
+      <span class="lc-arrow">→</span>
+      <div class="lc-box">Removed</div>
+    </div>
+    <pre>docker run -d --name web nginx   # create + start
+docker stop web                  # Running → Stopped
+docker start web                 # Stopped → Running
+docker rm web                    # Stopped → Removed
+docker rm -f web                 # force-remove while running</pre>
+  </div>
+
+  <!-- Slide 4: Port Mapping -->
+  <div class="slide">
+    <span class="slide-label">Networking</span>
+    <h2>Port Mapping</h2>
+    <p>Containers are isolated — no port is reachable from the host unless explicitly mapped.</p>
+    <pre>docker run -d -p 8080:80 --name web nginx
+#               ↑    ↑
+#           host  container</pre>
+    <div class="grid" style="margin-top:4px;">
+      <div class="card">
+        <div class="card-title">Host port 8080</div>
+        <p>The port you open in your browser: <code>http://localhost:8080</code></p>
+      </div>
+      <div class="card">
+        <div class="card-title">Container port 80</div>
+        <p>The port nginx listens on inside its isolated network</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Volumes -->
+  <div class="slide">
+    <span class="slide-label">Storage</span>
+    <h2>Persisting Data with Volumes</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Bind Mount</div>
+        <p>A host directory is mounted into the container. Changes are visible on both sides instantly.</p>
+        <pre style="margin-top:10px; font-size:0.8rem;">-v /host/path:/container/path</pre>
+        <p style="margin-top:8px; font-size:0.85rem;">Best for: <strong>development</strong> (live reload)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Named Volume</div>
+        <p>Docker manages the storage path. Survives <code>docker rm</code> and is portable.</p>
+        <pre style="margin-top:10px; font-size:0.8rem;">-v mydata:/data</pre>
+        <p style="margin-top:8px; font-size:0.85rem;">Best for: <strong>production data</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Env Vars -->
+  <div class="slide">
+    <span class="slide-label">Configuration</span>
+    <h2>Environment Variables</h2>
+    <p>Pass configuration into containers at runtime — no need to bake secrets into the image.</p>
+    <pre>docker run \
+  -e DB_HOST=db.internal \
+  -e DB_PORT=5432 \
+  -e DB_PASS=secret \
+  myapp:1.0
+
+# Or load from a file:
+docker run --env-file .env myapp:1.0</pre>
+    <ul>
+      <li>Never hard-code credentials in a <code>Dockerfile</code></li>
+      <li>Use <code>--env-file .env</code> for multiple variables</li>
+      <li>Secrets at scale: use Docker Secrets or a vault (e.g. AWS Secrets Manager)</li>
+    </ul>
+  </div>
+
+  <!-- Slide 7: Summary -->
+  <div class="slide">
+    <span class="slide-label">Summary</span>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Containers are <strong>ephemeral</strong> — data is lost on <code>docker rm</code></li>
+      <li>Use <strong>named volumes</strong> for production data, <strong>bind mounts</strong> for dev</li>
+      <li>Ports must be explicitly mapped: <code>-p host:container</code></li>
+      <li>Use <strong>environment variables</strong> for runtime configuration</li>
+      <li><code>docker exec -it &lt;name&gt; bash</code> — your best debugging tool</li>
+    </ul>
+    <p style="margin-top: 16px; color: #718096; font-size: 0.93rem;">
+      Ready? Return to the lesson and complete the exercise. 🚀
+    </p>
+  </div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button id="prev" onclick="move(-1)" disabled>← Prev</button>
+  <span class="counter" id="counter">1 / 7</span>
+  <button id="next" onclick="move(1)">Next →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+
+  function move(dir) {
+    slides[cur].classList.remove('active');
+    cur = Math.max(0, Math.min(slides.length - 1, cur + dir));
+    slides[cur].classList.add('active');
+    document.getElementById('counter').textContent = (cur + 1) + ' / ' + slides.length;
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === slides.length - 1;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
+  });
+</script>
+</body>
+</html>
