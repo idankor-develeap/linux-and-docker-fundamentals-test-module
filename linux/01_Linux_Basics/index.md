@@ -20,6 +20,18 @@ cd ..     # go up one level
 man ls    # read the manual for any command
 ```
 
+## Video Lessons
+
+Watch these before diving into the exercises:
+
+**Introduction to Linux**
+[![Introduction to Linux](https://img.youtube.com/vi/uY3_6e8So04/0.jpg)](https://www.youtube.com/watch?v=uY3_6e8So04)
+[https://www.youtube.com/watch?v=uY3_6e8So04](https://www.youtube.com/watch?v=uY3_6e8So04)
+
+**Linux Command Line Basics**
+[![Linux Command Line Basics](https://img.youtube.com/vi/pjCpFBFWNEY/0.jpg)](https://www.youtube.com/watch?v=pjCpFBFWNEY)
+[https://www.youtube.com/watch?v=pjCpFBFWNEY](https://www.youtube.com/watch?v=pjCpFBFWNEY)
+
 ## Exercise
 
 1. Open a terminal
